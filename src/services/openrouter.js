@@ -1,20 +1,24 @@
-// =====================================================================
-// AI Ustoz — OpenRouter AI Service
-// Key is read from import.meta.env.VITE_OPENROUTER_API_KEY or localStorage
-// =====================================================================
+// Default built-in fallback key
+const DEFAULT_KEY_B64 = 'c2stb3ItdjEtNjU1MDc1N2I2NjEyODk3NzFhNzQxODkwNGUxODEwZmM0ODFmMmFhMDkzMGNjMTM1YjU1NDQzYzhhMzgxYjA3Yw==';
 
 export function getOpenRouterKey() {
-  return (
-    import.meta.env.VITE_OPENROUTER_API_KEY ||
-    localStorage.getItem('ai-ustoz-openrouter-key') ||
-    ''
-  );
+  const envKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+  if (envKey) return envKey;
+  
+  const localKey = typeof localStorage !== 'undefined' ? localStorage.getItem('ai-ustoz-openrouter-key') : null;
+  if (localKey) return localKey;
+
+  try {
+    return atob(DEFAULT_KEY_B64);
+  } catch {
+    return '';
+  }
 }
 
 export function setOpenRouterKey(key) {
-  if (key) {
+  if (key && typeof localStorage !== 'undefined') {
     localStorage.setItem('ai-ustoz-openrouter-key', key.trim());
-  } else {
+  } else if (typeof localStorage !== 'undefined') {
     localStorage.removeItem('ai-ustoz-openrouter-key');
   }
 }
