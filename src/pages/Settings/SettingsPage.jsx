@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { 
   RiSettingsLine, RiMoonLine, RiSunLine, RiPaletteLine, 
-  RiRobot2Line, RiBellLine, RiRefreshLine, RiGlobalLine 
+  RiRobot2Line, RiBellLine, RiRefreshLine, RiGlobalLine,
+  RiKeyLine, RiCheckLine
 } from 'react-icons/ri';
 import { useTheme } from '../../context/ThemeContext';
 import { useNotification } from '../../context/NotificationContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { getOpenRouterKey, setOpenRouterKey } from '../../services/openrouter';
 import styles from './Settings.module.scss';
 
 const PRESET_COLORS = [
@@ -26,6 +28,9 @@ export default function SettingsPage() {
   const [defaultModel, setDefaultModel] = useState(() => 
     localStorage.getItem('ai-ustoz-default-model') || 'openai/gpt-4o-mini'
   );
+
+  const [apiKey, setApiKey] = useState(() => getOpenRouterKey());
+  const [keySaved, setKeySaved] = useState(false);
   
   // Notification states
   const [alerts, setAlerts] = useState({
@@ -40,6 +45,17 @@ export default function SettingsPage() {
     const saved = localStorage.getItem('ai-ustoz-alert-settings');
     if (saved) setAlerts(JSON.parse(saved));
   }, []);
+
+  const handleSaveApiKey = () => {
+    setOpenRouterKey(apiKey);
+    setKeySaved(true);
+    addToast({
+      type: 'success',
+      title: 'API Kalit saqlandi',
+      message: 'OpenRouter API kaliti muvaffaqiyatli saqlandi.'
+    });
+    setTimeout(() => setKeySaved(false), 2500);
+  };
 
   const handleSaveModel = (e) => {
     const model = e.target.value;
@@ -134,6 +150,30 @@ export default function SettingsPage() {
               <option value="anthropic/claude-3-haiku">Claude 3 Haiku</option>
               <option value="google/gemini-2.5-flash">Gemini 2.5 Flash</option>
             </select>
+          </div>
+
+          <div className={styles.settingsRow} style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '10px' }}>
+            <div style={{ width: '100%' }}>
+              <span className={styles.rowLabel}><RiKeyLine style={{ verticalAlign: 'middle', marginRight: 4 }} /> OpenRouter API Kaliti</span>
+              <p className={styles.rowDesc}>AI generatsiyasi uchun OpenRouter API kalitini kiriting (sk-or-v1-...)</p>
+            </div>
+            <div style={{ display: 'flex', gap: '10px', width: '100%', maxWidth: '520px' }}>
+              <input
+                type="password"
+                className="input-custom"
+                placeholder="sk-or-v1-..."
+                value={apiKey}
+                onChange={e => setApiKey(e.target.value)}
+                style={{ flex: 1 }}
+              />
+              <button
+                className="btn btn-primary"
+                onClick={handleSaveApiKey}
+                style={{ padding: '8px 18px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
+              >
+                {keySaved ? <><RiCheckLine /> Saqlandi</> : 'Saqlash'}
+              </button>
+            </div>
           </div>
         </div>
 

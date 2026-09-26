@@ -1,17 +1,33 @@
 // =====================================================================
 // AI Ustoz — OpenRouter AI Service
-// Key is read ONLY from: import.meta.env.VITE_OPENROUTER_API_KEY
+// Key is read from import.meta.env.VITE_OPENROUTER_API_KEY or localStorage
 // =====================================================================
 
-const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || '';
+export function getOpenRouterKey() {
+  return (
+    import.meta.env.VITE_OPENROUTER_API_KEY ||
+    localStorage.getItem('ai-ustoz-openrouter-key') ||
+    ''
+  );
+}
+
+export function setOpenRouterKey(key) {
+  if (key) {
+    localStorage.setItem('ai-ustoz-openrouter-key', key.trim());
+  } else {
+    localStorage.removeItem('ai-ustoz-openrouter-key');
+  }
+}
+
 const SITE_URL = 'https://ai-ustoz.uz';
 const SITE_NAME = 'AI Ustoz';
 const DEFAULT_CHAT_MODEL = 'openai/gpt-4o-mini';
 const IMAGE_MODEL = 'black-forest-labs/flux-schnell'; // Fast, high-quality
 
 function getHeaders() {
+  const key = getOpenRouterKey();
   return {
-    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+    'Authorization': `Bearer ${key}`,
     'HTTP-Referer': SITE_URL,
     'X-Title': SITE_NAME,
     'Content-Type': 'application/json',
@@ -19,8 +35,9 @@ function getHeaders() {
 }
 
 function assertKey() {
-  if (!OPENROUTER_API_KEY) {
-    throw new Error('OpenRouter API kaliti topilmadi. .env faylida VITE_OPENROUTER_API_KEY ni tekshiring.');
+  const key = getOpenRouterKey();
+  if (!key) {
+    throw new Error('OpenRouter API kaliti topilmadi. Netlify Environment Variables sozlamalarida VITE_OPENROUTER_API_KEY ni qo\'shing yoki Sozlamalar sahifasida kalitni kiriting.');
   }
 }
 
@@ -142,7 +159,8 @@ export async function generateImage({
   const { width, height } = dimensions[aspectRatio] || dimensions['1:1'];
 
   // Try OpenRouter first if key is available
-  if (OPENROUTER_API_KEY) {
+  const currentKey = getOpenRouterKey();
+  if (currentKey) {
     try {
       const styleModifiers = {
         realistic: 'photorealistic, ultra high quality, sharp details, 8k photography',
