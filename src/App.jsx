@@ -6,6 +6,7 @@ import { NotificationProvider } from './context/NotificationContext';
 import { SubscriptionProvider } from './context/SubscriptionContext';
 import AppRouter from './routes/AppRouter';
 import ToastContainer from './components/ui/Toast';
+import ApiKeyModal from './components/ui/ApiKeyModal';
 import ErrorBoundary from './components/ErrorBoundary';
 import './styles/main.scss';
 
@@ -20,6 +21,7 @@ export default function App() {
                 <NotificationProvider>
                   <AppRouter />
                   <ToastContainer />
+                  <ApiKeyModal />
                 </NotificationProvider>
               </SubscriptionProvider>
             </LanguageProvider>

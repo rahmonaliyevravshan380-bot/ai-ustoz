@@ -37,7 +37,10 @@ function getHeaders() {
 function assertKey() {
   const key = getOpenRouterKey();
   if (!key) {
-    throw new Error('OpenRouter API kaliti topilmadi. Netlify Environment Variables sozlamalarida VITE_OPENROUTER_API_KEY ni qo\'shing yoki Sozlamalar sahifasida kalitni kiriting.');
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('ai-missing-api-key'));
+    }
+    throw new Error('OpenRouter API kaliti topilmadi. Ochilgan oynada API kalitni kiriting yoki Sozlamalar sahifasiga o\'ting.');
   }
 }
 
