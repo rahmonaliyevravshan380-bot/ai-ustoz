@@ -1,0 +1,150 @@
+// =====================================================
+// AI Ustoz - SCSS Mixins
+// =====================================================
+
+@use 'variables' as *;
+
+// Glassmorphism
+@mixin glass($dark: false) {
+  @if $dark {
+    background: $glass-bg-dark;
+    border: 1px solid $glass-border-dark;
+  } @else {
+    background: $glass-bg-light;
+    border: 1px solid $glass-border-light;
+  }
+  backdrop-filter: $glass-blur;
+  -webkit-backdrop-filter: $glass-blur;
+}
+
+// Flex helpers
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+// Card
+@mixin card($padding: $spacing-6) {
+  border-radius: $radius-2xl;
+  padding: $padding;
+  box-shadow: $shadow-md;
+  transition: all $transition-base;
+}
+
+// Gradient text
+@mixin gradient-text($gradient: $gradient-primary) {
+  background: $gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// Truncate text
+@mixin truncate($lines: 1) {
+  @if $lines == 1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  } @else {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+// Responsive breakpoints
+@mixin mobile {
+  @media (max-width: 767px) { @content; }
+}
+
+@mixin tablet {
+  @media (min-width: 768px) and (max-width: 1199px) { @content; }
+}
+
+@mixin desktop {
+  @media (min-width: 1200px) { @content; }
+}
+
+@mixin max-md {
+  @media (max-width: 991px) { @content; }
+}
+
+// Scrollbar styling
+@mixin custom-scrollbar($width: 6px, $color: rgba(100, 116, 139, 0.3)) {
+  &::-webkit-scrollbar {
+    width: $width;
+    height: $width;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $color;
+    border-radius: $radius-full;
+    &:hover {
+      background: rgba(100, 116, 139, 0.5);
+    }
+  }
+}
+
+// Hover lift
+@mixin hover-lift($y: -4px) {
+  transition: transform $transition-base, box-shadow $transition-base;
+  &:hover {
+    transform: translateY($y);
+    box-shadow: $shadow-xl;
+  }
+}
+
+// Input style
+@mixin input-base {
+  width: 100%;
+  border-radius: $radius-lg;
+  padding: $spacing-3 $spacing-4;
+  font-family: $font-family;
+  font-size: $font-size-sm;
+  font-weight: $font-medium;
+  outline: none;
+  transition: all $transition-base;
+  border: 2px solid transparent;
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 4px rgba($primary, 0.15);
+  }
+}
+
+// Badge
+@mixin badge($bg, $color: white) {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-size-xs;
+  font-weight: $font-semibold;
+  background: $bg;
+  color: $color;
+}
+
+// Skeleton loading
+@mixin skeleton {
+  background: linear-gradient(90deg, var(--skeleton-start) 25%, var(--skeleton-mid) 50%, var(--skeleton-start) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: $radius-md;
+}
