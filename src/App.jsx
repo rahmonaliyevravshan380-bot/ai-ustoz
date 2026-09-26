@@ -6,23 +6,26 @@ import { NotificationProvider } from './context/NotificationContext';
 import { SubscriptionProvider } from './context/SubscriptionContext';
 import AppRouter from './routes/AppRouter';
 import ToastContainer from './components/ui/Toast';
+import ErrorBoundary from './components/ErrorBoundary';
 import './styles/main.scss';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <AuthProvider>
-          <LanguageProvider>
-            <SubscriptionProvider>
-              <NotificationProvider>
-                <AppRouter />
-                <ToastContainer />
-              </NotificationProvider>
-            </SubscriptionProvider>
-          </LanguageProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <ThemeProvider>
+          <AuthProvider>
+            <LanguageProvider>
+              <SubscriptionProvider>
+                <NotificationProvider>
+                  <AppRouter />
+                  <ToastContainer />
+                </NotificationProvider>
+              </SubscriptionProvider>
+            </LanguageProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
